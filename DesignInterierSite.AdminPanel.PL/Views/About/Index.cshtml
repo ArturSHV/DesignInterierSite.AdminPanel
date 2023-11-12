@@ -1,0 +1,82 @@
+﻿@{
+	Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+@model AboutPageAbstract
+
+<main class="content">
+	<div class="container-fluid p-0">
+
+		<h1 class="h3 mb-3">Обо мне</h1>
+
+		<div class="row">
+			<div class="col-md-9 col-xl-10">
+				<div class="tab-content">
+					<div class="tab-pane fade show active" id="account" role="tabpanel">
+
+						<div class="card">
+							<div class="card-body">
+								<p style="color:red">@ViewBag.Message</p>
+								<form asp-controller="About" asp-action="AboutHandler" method="post" enctype="multipart/form-data">
+									<div class="row">
+										<div class="col-md-8">
+											<div class="form-group">
+												<label for="inputUsername">Заголовок</label>
+												<input type="text" class="form-control" placeholder="Заголовок" value="@Model?.AboutModel?.Title" asp-for="@Model.AboutModel.Title" required>
+											</div>
+											<div class="form-group">
+												<label for="inputUsername">Описание</label>
+												<textarea rows="10" class="form-control" placeholder="Описание" asp-for="@Model.AboutModel.Text" required>@Model?.AboutModel?.Text</textarea>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="text-center upload-image">
+												<label for="file-input">
+													<input asp-for="@Model.AboutModel.Id" type="hidden" value="@Model?.AboutModel?.Id" />
+													<input asp-for="@Model.AboutModel.Image.Id" type="hidden" value="@Model?.AboutModel?.Image?.Id"/>
+													<input asp-for="@Model.AboutModel.Image.Name" type="hidden" value="@Model?.AboutModel?.Image?.Name" />
+													<img id="previewImg" src="@Model?.AboutModel?.Image?.Name" class="rounded-circle img-responsive mt-2" style="border-radius: 0% !important;cursor:pointer;" width="100%" />
+												</label>
+												<div class="mt-2">
+													<span class="btn btn-primary"><i class="fas fa-upload"></i> 
+														<input type="button" value="Загрузить" onclick="download()" style="background-color:transparent;border: none;color: white;" />
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<input id="file-input" accept=".png, .jpg, .jpeg" asp-for="@Model.AboutModel.FormFile" type="file" onchange="previewFile(this);" style="display: none;" />
+									<button type="submit" class="btn btn-primary">Сохранить изменения</button>
+								</form>
+							</div>
+						</div>
+
+					</div>
+					
+				</div>
+			</div>
+		</div>
+
+	</div>
+</main>
+<script>
+	function download()
+	{
+		$("#file-input").click();
+	}
+
+
+    function previewFile(input){
+        var file = $("input[type=file]").get(0).files[0];
+    
+        if(file){
+          var reader = new FileReader();
+    
+          reader.onload = function(){
+              $("#previewImg").attr("src", reader.result);
+          }
+    
+          reader.readAsDataURL(file);
+        }
+    }
+</script>
